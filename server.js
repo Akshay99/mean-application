@@ -1,10 +1,11 @@
-var express 	= require('express');
-var app         = express();
-var bodyParser  = require('body-parser');
-var morgan      = require('morgan');
-var mongoose    = require('mongoose');
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var mongoose = require('mongoose');
+var request = require('request');
 
-var jwt    = require('jsonwebtoken');
+var jwt = require('jsonwebtoken');
 var config = require('./server/config');
 
 var user = require('./server/routes/user.js');
@@ -12,24 +13,24 @@ var expense = require('./server/routes/expense.js');
 
 var port = process.env.PORT || config.serverport;
 
-var path =require("path");
+var path = require("path");
 
-mongoose.connect(config.database, function(err){
-	if(err){
-		console.log('Error connecting database, please check if MongoDB is running.');
-	}else{
-		console.log('Connected to database...');
-	}
+mongoose.connect(config.database, function (err) {
+  if (err) {
+    console.log('Error connecting database, please check if MongoDB is running.');
+  } else {
+    console.log('Connected to database...');
+  }
 });
 
 // use body parser so we can get info from POST and/or URL parameters
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(require('body-parser').json({ type : '*/*' }));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(require('body-parser').json({type: '*/*'}));
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
 // Enable CORS from client-side
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials");
@@ -42,9 +43,28 @@ app.use(express.static('dist'));
 
 // basic routes
 
-app.get('/', function(req, res) {
-	// res.render('index.html');
+app.get('/', function (req, res) {
+  // res.render('index.html');
   res.sendFile("index.html");
+
+});
+
+app.get('/sandbox', function (req, response) {
+  /*request("https://apisandbox.dev.clover.com/v3/merchants/Z5F5QK8W7ANG1/orders?expand=employee", function(error, response, body) {
+   res.json(body);
+   });*/
+  request({
+    headers: {
+      'Authorization': 'Bearer ad26d0b8-f8ed-1fa9-5c74-d19e704aebb4',
+      'Content-Type': 'application/json'
+    },
+    uri: 'https://apisandbox.dev.clover.com/v3/merchants/Z5F5QK8W7ANG1/orders?expand=employee',
+    method: 'GET'
+  }, function (err, res, body) {
+    response.setHeader('Content-Type', 'application/json');
+    response.send(body);
+    //response.json(body);
+  });
 
 });
 
@@ -60,8 +80,8 @@ apiRoutes.post('/login', user.login);
 apiRoutes.use(user.authenticate); // route middleware to authenticate and check token
 
 // authenticated routes
-apiRoutes.get('/', function(req, res) {
-	res.status(201).json({ message: 'Welcome to the authenticated routes!' });
+apiRoutes.get('/', function (req, res) {
+  res.status(201).json({message: 'Welcome to the authenticated routes!'});
 });
 
 apiRoutes.get('/user/:id', user.getuserDetails); // API returns user details
@@ -80,7 +100,7 @@ apiRoutes.post('/expense/total/:id', expense.expensetotal); // API returns expen
 
 apiRoutes.post('/expense/report/:id', expense.expensereport); //API returns expense report based on user input
 
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
   // res.render('index.html');
   res.redirect('/')
 });
