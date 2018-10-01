@@ -12,14 +12,11 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 @Component({
-  templateUrl: './order.component.html',
-  styles: ['.page-header{padding-bottom:0; margin:0; border-bottom: none;}']
+  templateUrl: './ordersearch.component.html'
 })
 
-export class OrderComponent implements OnInit {
-
-  pgTitle: string = 'Order Component';
-  sandboxElement: any;
+export class OrderSearchComponent implements OnInit {
+  orderForm: FormGroup;
 
   constructor(private fb: FormBuilder,
               private http: Http,
@@ -30,33 +27,31 @@ export class OrderComponent implements OnInit {
               private datePipe: DatePipe) {
   }
 
-  createNewOrder = function () {
-    this.http.get('/sandbox/create').subscribe(
-      data => {
-        this.listAllOrders();
-        this.toastr.success("Order Created", data.json().id);
-        console.log("data from API sandbox", data.json());
-      },
-      error => {
-        this.toastr.error("Eror in creation order", error);
-        console.log("Error of Sandbox ", error);
-      }
-    );
-  };
+  orderId = new FormControl('', [Validators.required]);
+  feedback = new FormControl('', []);
+  orderDetail: string;
 
-  listAllOrders = function () {
-    this.http.get('/sandbox').subscribe(
+  searchOrder(formdata: any): void {
+    this.http.get('/sandbox/order/' + this.orderForm.value.orderId).subscribe(
       data => {
-        this.sandboxElement = data.json();
-        console.log("data from API sandbox", data.json());
+        this.orderDetail = data.json();
       },
       error => {
         console.log("Error of Sandbox ", error);
       }
     );
-  };
+  }
+
+  sendFeedback(): void {
+    this.orderForm.value.feedback;
+  }
 
   ngOnInit() {
-    this.listAllOrders();
+
+    this.orderForm = this.fb.group({
+      orderId: this.orderId,
+      feedback: this.feedback
+    });
   }
+
 }

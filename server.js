@@ -81,6 +81,21 @@ app.get('/sandbox/create', function (req, response) {
   });
 });
 
+app.get('/sandbox/order/:id', function (req, response) {
+  var orederId = req.params.id;
+  request({
+    headers: {
+      'Authorization': 'Bearer ad26d0b8-f8ed-1fa9-5c74-d19e704aebb4',
+      'Content-Type': 'application/json'
+    },
+    uri: 'https://apisandbox.dev.clover.com/v3/merchants/Z5F5QK8W7ANG1/orders/' + orederId,
+    method: 'GET'
+  }, function (err, res, body) {
+    response.setHeader('Content-Type', 'application/json');
+    response.send(body);
+  });
+});
+
 app.post('/register', user.signup);
 
 // express router

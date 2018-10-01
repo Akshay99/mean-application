@@ -12,12 +12,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 @Component({
-  templateUrl: './order.component.html',
-  styles: ['.page-header{padding-bottom:0; margin:0; border-bottom: none;}']
+  templateUrl: './orderlist.component.html'
 })
 
-export class OrderComponent implements OnInit {
-
+export class OrderListComponent implements OnInit {
   pgTitle: string = 'Order Component';
   sandboxElement: any;
 
@@ -29,20 +27,6 @@ export class OrderComponent implements OnInit {
               private toastr: ToastrService,
               private datePipe: DatePipe) {
   }
-
-  createNewOrder = function () {
-    this.http.get('/sandbox/create').subscribe(
-      data => {
-        this.listAllOrders();
-        this.toastr.success("Order Created", data.json().id);
-        console.log("data from API sandbox", data.json());
-      },
-      error => {
-        this.toastr.error("Eror in creation order", error);
-        console.log("Error of Sandbox ", error);
-      }
-    );
-  };
 
   listAllOrders = function () {
     this.http.get('/sandbox').subscribe(

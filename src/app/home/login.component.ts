@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ToastrService } from '../common/toastr.service'
-import { AuthService } from '../user/auth.service';
+import {Component} from '@angular/core';
+import {FormControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router, ActivatedRoute} from '@angular/router';
+import {ToastrService} from '../common/toastr.service'
+import {AuthService} from '../user/auth.service';
 
 @Component({
   templateUrl: './login.component.html'
@@ -10,10 +10,10 @@ import { AuthService } from '../user/auth.service';
 
 export class LoginComponent {
 
-  constructor(private fb: FormBuilder, 
-    private authService: AuthService,
-    private router: Router,
-    private toastr: ToastrService) {
+  constructor(private fb: FormBuilder,
+              private authService: AuthService,
+              private router: Router,
+              private toastr: ToastrService) {
   }
 
   username = new FormControl('', [Validators.required]);
@@ -25,7 +25,7 @@ export class LoginComponent {
   });
 
 
-  loginUser(formdata:any): void {
+  loginUser(formdata: any): void {
     if (this.loginForm.dirty && this.loginForm.valid) {
       this.authService.login(this.loginForm.value)
         .subscribe(data => {
@@ -33,11 +33,11 @@ export class LoginComponent {
             this.toastr.error(data.json().message);
           } else {
             this.toastr.success('Login successful.');
-            this.router.navigate(['report']);
+            this.router.navigate(['order/list']);
           }
           this.loginForm.reset();
         });
     }
   }
-  
+
 }

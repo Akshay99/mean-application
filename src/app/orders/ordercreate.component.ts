@@ -12,12 +12,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 @Component({
-  templateUrl: './order.component.html',
-  styles: ['.page-header{padding-bottom:0; margin:0; border-bottom: none;}']
+  templateUrl: './ordercreate.component.html'
 })
 
-export class OrderComponent implements OnInit {
-
+export class OrderCreateComponent implements OnInit {
   pgTitle: string = 'Order Component';
   sandboxElement: any;
 
@@ -44,19 +42,6 @@ export class OrderComponent implements OnInit {
     );
   };
 
-  listAllOrders = function () {
-    this.http.get('/sandbox').subscribe(
-      data => {
-        this.sandboxElement = data.json();
-        console.log("data from API sandbox", data.json());
-      },
-      error => {
-        console.log("Error of Sandbox ", error);
-      }
-    );
-  };
-
   ngOnInit() {
-    this.listAllOrders();
   }
 }

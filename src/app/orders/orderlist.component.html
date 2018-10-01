@@ -1,0 +1,22 @@
+<table width="100%">
+  <thead>
+  <tr>
+    <th> Order Id</th>
+    <th> Currency</th>
+    <th>State</th>
+    <th>Tax Removed</th>
+    <th>Order Link</th>
+    <th>Created Tme</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let order of sandboxElement.elements">
+    <td>{{order.id}}</td>
+    <td>{{order.currency}}</td>
+    <td>{{order.state}}</td>
+    <td>{{order.taxRemoved}}</td>
+    <td><a href="{{order.href}}" target="_blank">link</a></td>
+    <td>{{order.createdTime | date :'short'}}</td>
+  </tr>
+  </tbody>
+</table>
