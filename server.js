@@ -50,9 +50,6 @@ app.get('/', function (req, res) {
 });
 
 app.get('/sandbox', function (req, response) {
-  /*request("https://apisandbox.dev.clover.com/v3/merchants/Z5F5QK8W7ANG1/orders?expand=employee", function(error, response, body) {
-   res.json(body);
-   });*/
   request({
     headers: {
       'Authorization': 'Bearer ad26d0b8-f8ed-1fa9-5c74-d19e704aebb4',
@@ -65,7 +62,23 @@ app.get('/sandbox', function (req, response) {
     response.send(body);
     //response.json(body);
   });
+});
 
+app.get('/sandbox/create', function (req, response) {
+  request({
+    headers: {
+      'Authorization': 'Bearer ad26d0b8-f8ed-1fa9-5c74-d19e704aebb4',
+      'Content-Type': 'application/json'
+    },
+    json: {"state": "open"},
+    body: {"state": "open"},
+    uri: 'https://apisandbox.dev.clover.com/v3/merchants/Z5F5QK8W7ANG1/orders',
+    method: 'POST'
+  }, function (err, res, body) {
+    response.setHeader('Content-Type', 'application/json');
+    response.send(body);
+    //response.json(body);
+  });
 });
 
 app.post('/register', user.signup);

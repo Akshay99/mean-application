@@ -29,7 +29,21 @@ export class OrderComponent implements OnInit {
               private datePipe: DatePipe) {
   }
 
-  ngOnInit() {
+  createNewOrder =function(){
+    this.http.get('/sandbox/create').subscribe(
+      data => {
+        this.listAllOrders();
+        this.toastr.success("Order Created",data.json().id);
+        console.log("data from API sandbox", data.json());
+      },
+      error => {
+        this.toastr.error("Eror in creation order",error);
+        console.log("Error of Sandbox ", error);
+      }
+    );
+  };
+
+  listAllOrders=function(){
     this.http.get('/sandbox').subscribe(
       data => {
         this.sandboxElement = data.json();
@@ -39,5 +53,9 @@ export class OrderComponent implements OnInit {
         console.log("Error of Sandbox ", error);
       }
     );
-  }
+  };
+
+    ngOnInit() {
+      this.listAllOrders();
+    }
 }
