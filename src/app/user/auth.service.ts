@@ -33,14 +33,6 @@ export class AuthService {
   login(oUser) {
     let headers = new Headers({'Content-Type': 'application/json'});
     let options = new RequestOptions({headers: headers});
-    this.http.get('/sandbox').subscribe(
-      data => {
-        console.log("data from API sandbox", data.json());
-      },
-      error => {
-        console.log("Error of Sandbox ", error);
-      }
-    );
 
     //CHANGE IN DEVELOPMENT MODE TO LOCALHOST!!!!
     // return this.http.post('http://localhost:1978/api/login', JSON.stringify(oUser), options)
