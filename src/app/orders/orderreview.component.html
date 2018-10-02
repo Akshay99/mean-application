@@ -1,1 +1,16 @@
-order Review
+<table width="100%">
+  <thead>
+  <tr>
+    <th> Order Id</th>
+    <th> Line Item</th>
+    <th> Review</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let review of reviewList">
+    <td>{{review.orderid}}</td>
+    <td>{{review.lineitem}}</td>
+    <td>{{review.review}}</td>
+  </tr>
+  </tbody>
+</table>

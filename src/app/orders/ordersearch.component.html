@@ -16,35 +16,33 @@
   <table *ngIf="orderDetail" width="100%">
     <thead>
     <tr>
-      <th> Order Id</th>
-      <th> Currency</th>
-      <th>State</th>
-      <th>Tax Removed</th>
+      <th>Item Id</th>
+      <th> Name</th>
+      <th>Price</th>
+      <th>Refunded</th>
       <th>Created Tme</th>
+      <th>Review</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td>{{orderDetail.id}}</td>
-      <td>{{orderDetail.currency}}</td>
-      <td>{{orderDetail.state}}</td>
-      <td>{{orderDetail.taxRemoved}}</td>
-      <td>{{orderDetail.createdTime | date :'short'}}</td>
+    <tr *ngFor="let order of orderDetail.lineItems.elements; let i = index;">
+      <td>{{order.id}}</td>
+      <td>{{order.name}}</td>
+      <td>{{order.price}}</td>
+      <td>{{order.refunded}}</td>
+      <td>{{order.createdTime | date :'short'}}</td>
+      <td>
+        <button *ngIf="!this.order.testMode" type="submit" (click)="showFeedback(i)" class="btn btn-info">Click for
+          Feedback
+        </button>
+        <div *ngIf="this.order.testMode">
+          <input style="width: 250px;display:inline-block" type="text" class="form-control" [formControl]="feedback"
+                 placeholder="Enter Your feedback">
+          <button type="button" style="display:inline-block" (click)="sendFeedback()" class="btn btn-primary">Send
+          </button>
+        </div>
+      </td>
     </tr>
     </tbody>
   </table>
-  <div *ngIf="orderDetail" class="form-group">
-    <label for="feedback" class="col-sm-2 control-label">Submit Your Feedback</label>
-    <div class="input-group col-sm-3">
-      <textarea class="form-control" id="feedback" rows="3" [formControl]="feedback"
-                placeholder="Please Enter Your Feedback"></textarea>
-    </div>
-  </div>
-  <div *ngIf="orderDetail" class="form-group">
-    <label class="col-sm-2 control-label"></label>
-    <div class="col-sm-10">
-      <button type="button" (click)="sendFeedback()" class="btn btn-primary">Submit</button>
-      <button type="reset" class="btn btn-default">Cancel</button>
-    </div>
-  </div>
 </form>

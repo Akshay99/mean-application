@@ -10,6 +10,7 @@ var config = require('./server/config');
 
 var user = require('./server/routes/user.js');
 var expense = require('./server/routes/expense.js');
+var orderroute = require('./server/routes/orderreview.js');
 
 var port = process.env.PORT || config.serverport;
 
@@ -49,30 +50,49 @@ app.get('/', function (req, res) {
 
 });
 
+var auth = 'ad26d0b8-f8ed-1fa9-5c74-d19e704aebb4',
+  mid = 'Z5F5QK8W7ANG1',
+  sandboxhost = 'https://apisandbox.dev.clover.com';
+
+
 app.get('/sandbox', function (req, response) {
   request({
     headers: {
-      'Authorization': 'Bearer ad26d0b8-f8ed-1fa9-5c74-d19e704aebb4',
+      'Authorization': 'Bearer ' + auth,
       'Content-Type': 'application/json'
     },
-    uri: 'https://apisandbox.dev.clover.com/v3/merchants/Z5F5QK8W7ANG1/orders?expand=employee',
+    uri: sandboxhost + '/v3/merchants/' + mid + '/orders?expand=employee',
     method: 'GET'
   }, function (err, res, body) {
+    var elements = JSON.parse(body);
+    /*for (var i = 0; i < elements.elements.length; i++) {
+     request({
+     headers: {
+     'Authorization': 'Bearer ' + auth,
+     'Content-Type': 'application/json'
+     },
+     json: {"name": "Berger", "price": 50},
+     body: {"name": "Berger", "price": 50},
+     uri: sandboxhost + '/v3/merchants/' + mid + '/orders/' + elements.elements[i].id + '/line_items',
+     method: 'POST'
+     }, function (err, res, body) {
+     console.log("value updated")
+     });
+     }*/
     response.setHeader('Content-Type', 'application/json');
     response.send(body);
-    //response.json(body);
   });
 });
 
 app.get('/sandbox/create', function (req, response) {
   request({
     headers: {
-      'Authorization': 'Bearer ad26d0b8-f8ed-1fa9-5c74-d19e704aebb4',
+      'Authorization': 'Bearer ' + auth,
       'Content-Type': 'application/json'
     },
     json: {"state": "open"},
     body: {"state": "open"},
-    uri: 'https://apisandbox.dev.clover.com/v3/merchants/Z5F5QK8W7ANG1/orders',
+    uri: sandboxhost + '/v3/merchants/' + mid + '/orders',
     method: 'POST'
   }, function (err, res, body) {
     response.setHeader('Content-Type', 'application/json');
@@ -85,10 +105,10 @@ app.get('/sandbox/order/:id', function (req, response) {
   var orederId = req.params.id;
   request({
     headers: {
-      'Authorization': 'Bearer ad26d0b8-f8ed-1fa9-5c74-d19e704aebb4',
+      'Authorization': 'Bearer ' + auth,
       'Content-Type': 'application/json'
     },
-    uri: 'https://apisandbox.dev.clover.com/v3/merchants/Z5F5QK8W7ANG1/orders/' + orederId,
+    uri: sandboxhost + '/v3/merchants/' + mid + '/orders/' + orederId + '?expand=lineItems',
     method: 'GET'
   }, function (err, res, body) {
     response.setHeader('Content-Type', 'application/json');
@@ -111,6 +131,10 @@ apiRoutes.use(user.authenticate); // route middleware to authenticate and check 
 apiRoutes.get('/', function (req, res) {
   res.status(201).json({message: 'Welcome to the authenticated routes!'});
 });
+
+apiRoutes.get('/review', orderroute.getallReviews);
+
+apiRoutes.post('/review', orderroute.savereview);
 
 apiRoutes.get('/user/:id', user.getuserDetails); // API returns user details
 

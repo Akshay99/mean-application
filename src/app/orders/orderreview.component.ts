@@ -10,12 +10,25 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
+import {OrderService} from './order.service';
 
 @Component({
   templateUrl: './orderreview.component.html'
 })
 
+
 export class OrderReviewComponent implements OnInit {
+  constructor(private orderService: OrderService) {
+  }
+
+  reviewList
+
   ngOnInit() {
+
+    this.orderService.getReview()
+      .subscribe(data => {
+        this.reviewList = data.data;
+      });
+
   }
 }

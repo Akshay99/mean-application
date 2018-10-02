@@ -11,6 +11,7 @@ import {OrderSearchComponent} from './ordersearch.component';
 import {OrderComponent} from './order.component';
 import {AuthGuard} from '../user/auth-guard.service';
 import {AuthService} from '../user/auth.service';
+import {OrderService} from './order.service'
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import {AuthService} from '../user/auth.service';
     DatePipe,
     AuthService,
     AuthGuard,
+    OrderService
   ]
 })
 export class OrderModule {
